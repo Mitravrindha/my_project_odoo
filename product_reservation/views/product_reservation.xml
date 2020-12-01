@@ -1,0 +1,98 @@
+<odoo>
+    <data>
+        <!--tree view-->
+        <record model="ir.ui.view" id="product_reservations_list">
+            <field name="name">ReservationList</field>
+            <field name="model">product.reservation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="reservation_seq"/>
+                    <field name="reservation_name"/>
+                    <field name="customer_id"/>
+                    <field name="expiry_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--form view-->
+        <record model="ir.ui.view" id="product_reservations_form">
+            <field name="name">ReservationFrom</field>
+            <field name="model">product.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Reservation">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="reservation_seq" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="reservation_name"/>
+                            <field name="customer_id"/>
+                            <field name="expiry_date"/>
+                            <field name="reservation_lines">
+                                <tree string="Reservation Lines" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_price"/>
+                                    <field name="reservation_id" invisible="1"/>
+                                </tree>
+                            </field>
+                            <field name="note" placeholder="Internal Note..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--action window-->
+        <record model="ir.actions.act_window" id="product_reservation_action">
+            <field name="name">Product Reservation</field>
+            <field name="res_model">product.reservation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--product reservation menu in contacts-->
+
+        <menuitem name="Product Reservations" id="reservations_menu" parent="sale.sale_order_menu"
+                  action="product_reservation_action"/>
+
+
+        <!--adding smart button to customer-->
+        <record id="product_reservation_smart_button" model="ir.ui.view">
+            <field name="name">reservation.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+                    <button name="open_reservation" type="object" string="Reservations"
+                            class="oe_stat_button" icon="fa-calender">
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+        <!--delete reservation after expiration date-->
+        <!--
+        <delete model = “product.reservation” search [(expiry_date,’<’,’today’)]/>
+        -->
+
+        <!--adding reservation into sale order form-->
+        <record id="sale_order_reservation_view" model="ir.ui.view">
+            <field name="name">sale.order.reservation.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="reservation_name"/>
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

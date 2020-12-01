@@ -1,58 +1,49 @@
 <odoo>
-  <data>
+    <data>
 
 
-    <record model="ir.ui.view" id="machine_names_list">
-      <field name="name">machines.name.list</field>
-      <field name="model">machines.list</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="machine_name"/>
-        </tree>
-      </field>
-    </record>
+        <record model="ir.ui.view" id="machine_names_list">
+            <field name="name">machines.name.list</field>
+            <field name="model">machines.list</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="machine_name"/>
+                </tree>
+            </field>
+        </record>
 
-    <record model="ir.ui.view" id="machine_names_form">
-      <field name="name">machines.name.form</field>
-      <field name="model">machines.list</field>
-      <field name="arch" type="xml">
-        <form>
-          <group>
-            <group>
-              <field name="machine_name"/>
-            </group>
-          </group>
-        </form>
-      </field>
-    </record>
+        <record model="ir.ui.view" id="machine_names_form">
+            <field name="name">machines.name.form</field>
+            <field name="model">machines.list</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="machine_name"/>
+                        </group>
+                    </sheet>
 
-    <record model="ir.actions.act_window" id="machines_action_window">
-      <field name="name">Machine List</field>
-      <field name="res_model">machines.list</field>
-      <field name="view_mode">tree,form</field>
+                </form>
+            </field>
+        </record>
 
-
-    </record>
-
-    <!--<menuitem name="Work Order Queue" id="machines.menu_1" parent="sale.sale_order_menu" action="machines_action_window"/>-->
+        <record model="ir.actions.act_window" id="machines_action_window">
+            <field name="name">Machine List</field>
+            <field name="res_model">machines.list</field>
+            <field name="view_mode">tree,form</field>
 
 
-    <!-- Top menu item -->
+        </record>
 
-    <menuitem name="Machines" id="machines_menu_root"/>
-    <!-- menu categories -->
 
-    <menuitem name="Machine List" id="machines.menu_1" parent="machines_menu_root" action="machines_action_window"/>
-    <!--
 
-    <menuitem name="Menu 2" id="machines.menu_2" parent="machines.menu_root"/>
--->
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="machines.menu_1_list" parent="machines.menu_1"
-              action="machines.action_window"/>
-    <menuitem name="Server to list" id="machines" parent="machines.menu_2"
-              action="machines.action_server"/>
--->
-  </data>
+        <!-- Top menu item -->
+
+        <menuitem name="Machines" id="machines_menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Machine List" id="machines.menu_1" parent="machines_menu_root" action="machines_action_window"/>
+
+    </data>
 </odoo>

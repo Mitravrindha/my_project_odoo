@@ -52,7 +52,7 @@
         </field>
     </record>
 
-
+    <!-- adding menu -->
     <menuitem name="Work Order Queue" id="workorder_menu" parent="sale.sale_order_menu" action="sale_order_list_view"/>
 
     <!-- adding filters -->
