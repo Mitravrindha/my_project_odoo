@@ -26,8 +26,8 @@
     'data': [
         'security/ir.model.access.csv',
         'data/sequence.xml',
+        'data/cron_job.xml',
         'views/product_reservation.xml',
-        'views/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

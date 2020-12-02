@@ -14,8 +14,13 @@ class ProductReservation(models.Model):
     note = fields.Text('Internal Note')
     reservation_seq = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True,
                                   default=lambda self: _('New'))
+    sale_ref = fields.Many2one('sale.order',string="Sale Order Reference")
 
-    # so_id = fields.Many2one('sale.order')
+
+    @api.constrains('expiry_date')
+    def expiry_check(self):
+        self.search([('expiry_date', '<', fields.Datetime.now())]).unlink()
+
 
     @api.model
     def create(self, vals):
@@ -25,11 +30,15 @@ class ProductReservation(models.Model):
         return result
 
 
+
+
+
 class ProductReservationLines(models.Model):
     _name = 'product.reservation.lines'
     product_id = fields.Many2one('product.product', string="Product")
     product_qty = fields.Integer(string="Quantity")
     product_price = fields.Integer(string="Price")
+
     reservation_id = fields.Many2one('product.reservation', string="Reservation Id")
 
 
@@ -54,41 +63,16 @@ class SaleReservationInherit(models.Model):
     _inherit = 'sale.order'
 
     reservation_name = fields.Many2one('product.reservation', string="Name of Reservation")
-    # reserve_id = fields.One2many('product.reservation.lines', 'reservation_id', string="Reservation Lines")
 
-    # @api.onchange('reservation_name')
-        # line_env = self.env['sale.order.line']
-        # for wizard in self:
-        #     new_line = line_env.create({
-        #             'product_id': product_id.id,
-        #             'name': what.product_id.name,
-        #             'order_id': what.sale_order_id.id,
-        #             'product_uom': what.product_id.uom_id.id})
-
-
-                # for rec in self:
-        #     lines =[]
-        #     print("self.reservation_name",self.reservation_name)
-
-
-# reserve_id = fields.One2many('product.reservation', 'so_id')
-
-# @api.depends('reservation_name')
-# def onchange_reservation_name(self):
-#     for rec in self:
-#         rec.pack_id = [(6, 0, rec.reservation_name)]
-
-#
-#
-# class SaleOrderFormInherit(models.Model):
-#     _inherit = 'sale.order'
-#     package_ids = fields.Many2many('sales.package', string="Packages",
-#                                    required=True)
-#     pack_id = fields.One2many('sales.package', 'so_id')
-#
-#     @api.onchange('package_ids')
-#     def _onchange_package_ids(self):
-#
-#         for rec in self:
-#         print("pack_id", rec.package_ids.ids)
-#     rec.pack_id = [(6, 0, rec.package_ids.ids)]
+    @api.onchange('reservation_name')
+    def _onchange_reservation_name(self):
+        line_env = self.env['sale.order.line']
+        # print("self.reservation_name", self.reservation_name)
+        sale_lines = [(5, 0, 0)]
+        for rec in self.reservation_name.reservation_lines:
+            sale_lines.append(
+                [0, 0, {'product_id': rec.product_id.id, 'product_uom_qty': rec.product_qty,
+                        'price_unit': rec.product_id.lst_price, 'product_uom': rec.product_id.uom_id,
+                        'name': rec.product_id.default_code}])
+            print(rec.product_id.uom_id)
+        self.order_line = sale_lines

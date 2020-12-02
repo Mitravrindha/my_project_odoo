@@ -9,9 +9,3 @@ class SaleOrderInherit(models.Model):
     delivery_date = fields.Date(string="Delivery Date")
     materials_recieved = fields.Boolean(string="Materials Recieved")
 
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         for record in self:
-#             record.value2 = float(record.value) / 100

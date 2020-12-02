@@ -26,20 +26,32 @@
                                 <field name="reservation_seq" readonly="1"/>
                             </h1>
                         </div>
+
                         <group>
-                            <field name="reservation_name"/>
-                            <field name="customer_id"/>
-                            <field name="expiry_date"/>
-                            <field name="reservation_lines">
-                                <tree string="Reservation Lines" editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_price"/>
-                                    <field name="reservation_id" invisible="1"/>
-                                </tree>
-                            </field>
-                            <field name="note" placeholder="Internal Note..."/>
+                            <field name="reservation_name" style="width:40%%"/>
+                            <field name="customer_id" style="width:40%%"/>
                         </group>
+                        <group>
+                            <field name="expiry_date" style="width:40%%"/>
+
+                        </group>
+                        <group>
+                             <field name="sale_ref" style="width:40%%"/>
+                        </group>
+
+                        <field name="reservation_lines">
+                            <tree string="Reservation Lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_price"/>
+                                <field name="reservation_id" invisible="1"/>
+                            </tree>
+                        </field>
+
+
+                        <field name="note" placeholder="Internal Note..."/>
+
+
                     </sheet>
                 </form>
             </field>
@@ -72,8 +84,6 @@
                 </xpath>
             </field>
         </record>
-
-
 
 
         <!--delete reservation after expiration date-->
