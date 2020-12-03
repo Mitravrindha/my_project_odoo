@@ -14,13 +14,11 @@ class ProductReservation(models.Model):
     note = fields.Text('Internal Note')
     reservation_seq = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True,
                                   default=lambda self: _('New'))
-    sale_ref = fields.Many2one('sale.order',string="Sale Order Reference")
-
+    sale_ref = fields.Many2one('sale.order', string="Sale Order Reference")
 
     @api.constrains('expiry_date')
     def expiry_check(self):
         self.search([('expiry_date', '<', fields.Datetime.now())]).unlink()
-
 
     @api.model
     def create(self, vals):
@@ -28,9 +26,6 @@ class ProductReservation(models.Model):
             vals['reservation_seq'] = self.env['ir.sequence'].next_by_code('product.reservation.sequence') or _('New')
         result = super(ProductReservation, self).create(vals)
         return result
-
-
-
 
 
 class ProductReservationLines(models.Model):
@@ -64,6 +59,7 @@ class SaleReservationInherit(models.Model):
 
     reservation_name = fields.Many2one('product.reservation', string="Name of Reservation")
 
+
     @api.onchange('reservation_name')
     def _onchange_reservation_name(self):
         line_env = self.env['sale.order.line']
@@ -76,3 +72,32 @@ class SaleReservationInherit(models.Model):
                         'name': rec.product_id.default_code}])
             print(rec.product_id.uom_id)
         self.order_line = sale_lines
+
+    def action_confirm(self):
+        res = super(SaleReservationInherit, self).action_confirm()
+        reserve = self.env['product.reservation']
+        reserve.update({
+            'sale_ref': self.name
+        })
+        # print(reserve.sale_ref)
+        print(self.name)
+
+        return res
+
+    # def default_get(self, fields):
+    #     res = super(AccountInvoiceSend, self).default_get(fields)
+    #     res_ids = self._context.get('active_ids')
+    #
+    #     invoices = self.env['account.move'].browse(res_ids).filtered(
+    #         lambda move: move.is_invoice(include_receipts=True))
+    #     if not invoices:
+    #         raise UserError(_("You can only send invoices."))
+    #
+    #     composer = self.env['mail.compose.message'].create({
+    #         'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
+    #     })
+    #     res.update({
+    #         'invoice_ids': res_ids,
+    #         'composer_id': composer.id,
+    #     })
+    #     return res
