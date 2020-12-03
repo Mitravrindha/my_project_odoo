@@ -57,14 +57,14 @@ class ResPartnerInherit(models.Model):
 class SaleReservationInherit(models.Model):
     _inherit = 'sale.order'
 
-    reservation_name = fields.Many2one('product.reservation', string="Name of Reservation")
+    reserve_id = fields.Many2one('product.reservation', string="Name of Reservation")
 
-    @api.onchange('reservation_name')
-    def _onchange_reservation_name(self):
+    @api.onchange('reserve_id')
+    def _onchange_reserve_id(self):
         line_env = self.env['sale.order.line']
         # print("self.reservation_name", self.reservation_name)
         sale_lines = [(5, 0, 0)]
-        for rec in self.reservation_name.reservation_lines:
+        for rec in self.reserve_id.reservation_lines:
             sale_lines.append(
                 [0, 0, {'product_id': rec.product_id.id, 'product_uom_qty': rec.product_qty,
                         'price_unit': rec.product_id.lst_price, 'product_uom': rec.product_id.uom_id,
@@ -75,9 +75,9 @@ class SaleReservationInherit(models.Model):
     def action_confirm(self):
         res = super(SaleReservationInherit, self).action_confirm()
         reserve = self.env['product.reservation']
-        self.reservation_name.sale_ref = self.id
-        print(self.reservation_name.sale_ref)
-        print(self.name)
+        self.reserve_id.sale_ref = self.id
+        # print(self.reserve_id.sale_ref)
+        # print(self.id)
         return res
 
 # def default_get(self, fields):
