@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        <!-- explicit list view  and form view definition -->
+        <record model="ir.ui.view" id="reservation_update_list">
+            <field name="name">Reservation Update list</field>
+            <field name="model">reservation.update</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="reserve_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="reservation_update_form">
+            <field name="name">Reservation Update Form</field>
+            <field name="model">reservation.update</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="invoice_reservations" type="object" string="Create Invoice"
+                                    class="oe_stat_button">
+                            </button>
+                        </div>
+                        <group>
+                            <field name="reserve_ids" widget="many2many_tags"/>
+
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="reservation_update_action">
+            <field name="name">Reservation Update</field>
+            <field name="res_model">reservation.update</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--menu item-->
+        <menuitem name="Create Invoices" id="reserve_invoices" parent="sale.sale_order_menu"
+                  action="reservation_update_action" groups="base.group_user"/>
+
+    </data>
+</odoo>

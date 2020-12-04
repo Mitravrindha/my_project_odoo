@@ -36,7 +36,7 @@
 
                         </group>
                         <group>
-                             <field name="sale_ref" style="width:40%%"/>
+                            <field name="sale_ref" style="width:40%%"/>
                         </group>
 
                         <field name="reservation_lines">
@@ -47,11 +47,7 @@
                                 <field name="reservation_id" invisible="1"/>
                             </tree>
                         </field>
-
-
                         <field name="note" placeholder="Internal Note..."/>
-
-
                     </sheet>
                 </form>
             </field>
@@ -69,6 +65,8 @@
 
         <menuitem name="Product Reservations" id="reservations_menu" parent="sale.sale_order_menu"
                   action="product_reservation_action"/>
+        <menuitem name="Create Invoices" id="reserve_invoices" parent="sale.sale_order_menu"
+                  action="reservation_update_action" groups="base.group_user"/>
 
 
         <!--adding smart button to customer-->
@@ -85,11 +83,6 @@
             </field>
         </record>
 
-
-        <!--delete reservation after expiration date-->
-        <!--
-        <delete model = “product.reservation” search [(expiry_date,’<’,’today’)]/>
-        -->
 
         <!--adding reservation into sale order form-->
         <record id="sale_order_reservation_view" model="ir.ui.view">

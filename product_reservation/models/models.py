@@ -62,7 +62,6 @@ class SaleReservationInherit(models.Model):
     @api.onchange('reserve_id')
     def _onchange_reserve_id(self):
         line_env = self.env['sale.order.line']
-        # print("self.reservation_name", self.reservation_name)
         sale_lines = [(5, 0, 0)]
         for rec in self.reserve_id.reservation_lines:
             sale_lines.append(
@@ -76,24 +75,5 @@ class SaleReservationInherit(models.Model):
         res = super(SaleReservationInherit, self).action_confirm()
         reserve = self.env['product.reservation']
         self.reserve_id.sale_ref = self.id
-        # print(self.reserve_id.sale_ref)
-        # print(self.id)
         return res
 
-# def default_get(self, fields):
-#     res = super(AccountInvoiceSend, self).default_get(fields)
-#     res_ids = self._context.get('active_ids')
-#
-#     invoices = self.env['account.move'].browse(res_ids).filtered(
-#         lambda move: move.is_invoice(include_receipts=True))
-#     if not invoices:
-#         raise UserError(_("You can only send invoices."))
-#
-#     composer = self.env['mail.compose.message'].create({
-#         'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
-#     })
-#     res.update({
-#         'invoice_ids': res_ids,
-#         'composer_id': composer.id,
-#     })
-#     return res
