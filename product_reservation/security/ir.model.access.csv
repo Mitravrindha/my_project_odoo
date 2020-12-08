@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_reservation,product.reservation,model_product_reservation,base.group_user,1,1,1,1
 access_product_reservation_lines,product.reservation.lines,model_product_reservation_lines,base.group_user,1,1,1,1
+access_create_invoices,create.invoices,model_create_invoices,base.group_user,1,1,1,1
 

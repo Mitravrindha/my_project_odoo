@@ -20,11 +20,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['contacts', 'sale', 'base'],
+    'depends': ['contacts', 'sale', 'base', 'account'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'wizards/create_invoice.xml',
         'data/sequence.xml',
         'data/cron_job.xml',
         'views/product_reservation.xml',

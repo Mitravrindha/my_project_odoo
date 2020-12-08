@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="create_invoice_form">
+        <field name="name">CreateInvoiceForm</field>
+        <field name="model">create.invoices</field>
+        <field name="arch" type="xml">
+            <form string="Create Invoice">
+                <group>
+                    <field name="reserved_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="create_invoices" string="Create" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_invoice_action" model="ir.actions.act_window">
+        <field name="name">Create Invoice</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.invoices</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_invoice_form"/>
+        <field name="target">new</field>
+    </record>
+
+            <!--adding reservation into sale order form-->
+        <record id="account_move_view" model="ir.ui.view">
+            <field name="name">account.invoice.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="invoiced_id" widget="many2many_tags" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>

@@ -8,4 +8,3 @@ class SaleOrderInherit(models.Model):
     machine_name = fields.Many2one("machines.list", string="Machine Name")
     delivery_date = fields.Date(string="Delivery Date")
     materials_recieved = fields.Boolean(string="Materials Recieved")
-

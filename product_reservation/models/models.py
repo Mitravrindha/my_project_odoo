@@ -15,6 +15,7 @@ class ProductReservation(models.Model):
     reservation_seq = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True,
                                   default=lambda self: _('New'))
     sale_ref = fields.Many2one('sale.order', string="Sale Order Reference")
+    inv_ref = fields.Many2one('account.move', string="Invoice Reference")
 
     @api.constrains('expiry_date')
     def expiry_check(self):
@@ -68,12 +69,22 @@ class SaleReservationInherit(models.Model):
                 [0, 0, {'product_id': rec.product_id.id, 'product_uom_qty': rec.product_qty,
                         'price_unit': rec.product_id.lst_price, 'product_uom': rec.product_id.uom_id,
                         'name': rec.product_id.default_code}])
-            print(rec.product_id.uom_id)
+            print(rec.product_qty)
+
+            @api.onchange('product_uom_qty')
+            def _onchange_product_qty(val):
+                print("hey")
+
         self.order_line = sale_lines
+        for rec in self.reserve_id:
+            self.partner_id = rec.customer_id
 
     def action_confirm(self):
         res = super(SaleReservationInherit, self).action_confirm()
         reserve = self.env['product.reservation']
+        order_env = self.env['sale.order.line']
         self.reserve_id.sale_ref = self.id
-        return res
+        for rec in self.reserve_id.reservation_lines:
+            print("h")
 
+        return res
