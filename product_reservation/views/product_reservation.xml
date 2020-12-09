@@ -30,19 +30,22 @@
                                 <field name="reservation_seq" readonly="1"/>
                             </h1>
                         </div>
+                        <div class="oe_structure">
 
-                        <group>
-                            <field name="reservation_name" style="width:40%%"/>
-                            <field name="customer_id" style="width:40%%"/>
-                        </group>
-                        <group>
-                            <field name="expiry_date" style="width:40%%"/>
+                            <group>
+                                <group>
+                                    <field name="reservation_name" style="width:55%%" required="1"/>
+                                    <field name="customer_id" style="width:55%%" required="1"/>
 
-                        </group>
-                        <group>
-                            <field name="sale_ref" style="width:40%%"/>
-                            <field name="inv_ref" style="width:40%%"/>
-                        </group>
+                                    <field name="sale_ref" style="width:55%%"/>
+                                    <field name="inv_ref" style="width:55%%"/>
+                                </group>
+                                <group>
+                                    <field name="expiry_date" style="width:55%%" required="1"/>
+
+                                </group>
+                            </group>
+                        </div>
 
                         <field name="reservation_lines">
                             <tree string="Reservation Lines" editable="bottom">
@@ -65,7 +68,7 @@
         </record>
 
 
-        <!--product reservation menu in contacts-->
+        <!--product reservation and create invoices menu in contacts-->
 
         <menuitem name="Product Reservations" id="reservations_menu" parent="sale.sale_order_menu"
                   action="product_reservation_action"/>
@@ -80,8 +83,9 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_button_box']" position="inside">
-                    <button name="open_reservation" type="object" string="Reservations"
-                            class="oe_stat_button" icon="fa-calender">
+                    <button name="open_reservation" type="object"
+                            class="oe_stat_button" icon="fa-check">
+                        <field string="Reservations" name="reservation_count" widget="statinfo"/>
                     </button>
                 </xpath>
             </field>

@@ -54,3 +54,8 @@ class AccountMoveInherit(models.Model):
         return res
 
 
+class SalesPersonReport(models.TransientModel):
+    _name = 'person.report'
+
+    person_id = fields.Many2one('res.users', string="Sales Person")
+    person_date = fields.Date(string="Date")

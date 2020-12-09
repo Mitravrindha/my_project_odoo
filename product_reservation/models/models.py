@@ -32,14 +32,19 @@ class ProductReservation(models.Model):
 class ProductReservationLines(models.Model):
     _name = 'product.reservation.lines'
     product_id = fields.Many2one('product.product', string="Product")
-    product_qty = fields.Integer(string="Quantity")
+    product_qty = fields.Float(string="Quantity")
     product_price = fields.Integer(string="Price")
 
     reservation_id = fields.Many2one('product.reservation', string="Reservation Id")
 
+    @api.constrains('product_qty')
+    def product_check(self):
+        self.search([('product_qty', '=', 0)]).unlink()
+
 
 class ResPartnerInherit(models.Model):
     _inherit = 'res.partner'
+    reservation_count = fields.Integer(compute='compute_count')
 
     def open_reservation(self):
         print("hello button")
@@ -53,6 +58,11 @@ class ResPartnerInherit(models.Model):
             'view_id': False,
             'view_type': 'form',
         }
+
+    def compute_count(self):
+        for record in self:
+            record.reservation_count = self.env['product.reservation'].search_count(
+                [('customer_id', '=', self.id)])
 
 
 class SaleReservationInherit(models.Model):
@@ -71,10 +81,6 @@ class SaleReservationInherit(models.Model):
                         'name': rec.product_id.default_code}])
             print(rec.product_qty)
 
-            @api.onchange('product_uom_qty')
-            def _onchange_product_qty(val):
-                print("hey")
-
         self.order_line = sale_lines
         for rec in self.reserve_id:
             self.partner_id = rec.customer_id
@@ -83,8 +89,15 @@ class SaleReservationInherit(models.Model):
         res = super(SaleReservationInherit, self).action_confirm()
         reserve = self.env['product.reservation']
         order_env = self.env['sale.order.line']
-        self.reserve_id.sale_ref = self.id
-        for rec in self.reserve_id.reservation_lines:
-            print("h")
 
+        self.reserve_id.sale_ref = self.id
+
+        for rec in self.reserve_id.reservation_lines:
+            for line in self.order_line:
+                if rec.product_id == line.product_id:
+                    print(rec.product_id)
+                    print(line.product_id)
+                    diff = rec.product_qty - line.product_uom_qty
+                    rec.product_qty = diff
+                    # print(diff)
         return res
