@@ -74,6 +74,8 @@
                   action="product_reservation_action"/>
         <menuitem name="Create Invoices" id="invoices_menu" parent="sale.sale_order_menu"
                   action="create_invoice_action"/>
+        <menuitem name="Create Reports" id="reports_menu" parent="sale.sale_order_menu"
+                  action="create_report_action"/>
 
 
         <!--adding smart button to customer-->
@@ -103,6 +105,8 @@
                 </field>
             </field>
         </record>
+
+
 
 
     </data>

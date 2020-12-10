@@ -29,6 +29,8 @@
         'data/sequence.xml',
         'data/cron_job.xml',
         'views/product_reservation.xml',
+        'reports/report.xml',
+        'reports/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

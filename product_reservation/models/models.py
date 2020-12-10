@@ -16,10 +16,13 @@ class ProductReservation(models.Model):
                                   default=lambda self: _('New'))
     sale_ref = fields.Many2one('sale.order', string="Sale Order Reference")
     inv_ref = fields.Many2one('account.move', string="Invoice Reference")
+    active = fields.Boolean('Active', default=True)
 
     @api.constrains('expiry_date')
     def expiry_check(self):
-        self.search([('expiry_date', '<', fields.Datetime.now())]).unlink()
+        val = self.search([('expiry_date', '<', fields.Datetime.now())])
+        for rec in self:
+            val.active = False
 
     @api.model
     def create(self, vals):
@@ -36,10 +39,6 @@ class ProductReservationLines(models.Model):
     product_price = fields.Integer(string="Price")
 
     reservation_id = fields.Many2one('product.reservation', string="Reservation Id")
-
-    @api.constrains('product_qty')
-    def product_check(self):
-        self.search([('product_qty', '=', 0)]).unlink()
 
 
 class ResPartnerInherit(models.Model):
@@ -75,10 +74,11 @@ class SaleReservationInherit(models.Model):
         line_env = self.env['sale.order.line']
         sale_lines = [(5, 0, 0)]
         for rec in self.reserve_id.reservation_lines:
-            sale_lines.append(
-                [0, 0, {'product_id': rec.product_id.id, 'product_uom_qty': rec.product_qty,
-                        'price_unit': rec.product_id.lst_price, 'product_uom': rec.product_id.uom_id,
-                        'name': rec.product_id.default_code}])
+            if rec.product_qty > 0:
+                sale_lines.append(
+                    [0, 0, {'product_id': rec.product_id.id, 'product_uom_qty': rec.product_qty,
+                            'price_unit': rec.product_id.lst_price, 'product_uom': rec.product_id.uom_id,
+                            'name': rec.product_id.default_code}])
             print(rec.product_qty)
 
         self.order_line = sale_lines
