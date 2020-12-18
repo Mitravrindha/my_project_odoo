@@ -3,19 +3,15 @@
     'name': "ProductReservation",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        This module allows to reserve product and the needed quantity""",
 
     'description': """
-        Long description of module's purpose
+        This module allows to reserve product and the needed quantity.Reservation is added to the sale order form,while 
+        selecting reservation name from there,order lines are populated with details of reservation
     """,
 
     'author': "My Company",
     'website': "http://www.yourcompany.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
     'category': 'Uncategorized',
     'version': '0.1',
 
@@ -25,12 +21,9 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'wizards/create_invoice.xml',
         'data/sequence.xml',
         'data/cron_job.xml',
         'views/product_reservation.xml',
-        'reports/report.xml',
-        'reports/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

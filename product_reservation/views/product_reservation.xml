@@ -10,6 +10,7 @@
                     <field name="reservation_name"/>
                     <field name="customer_id"/>
                     <field name="expiry_date"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -21,8 +22,12 @@
             <field name="arch" type="xml">
                 <form string="Reservation">
                     <header>
-                        <button name="%(create_invoice_action)d" string="Create Invoice" type="action"
-                                class="oe_highlight"/>
+                        <button name="confirm_reserve" string="Confirm" type="object"
+                                class="oe_highlight" attrs="{'invisible':[('state','!=','draft')]}"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" attrs="{'invisible':[('state','!=','draft')]}"/>
+
+                        <field name="state" widget="statusbar"/>
+
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -56,6 +61,12 @@
                         </field>
                         <field name="note" placeholder="Internal Note..."/>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+
                 </form>
             </field>
         </record>
@@ -72,13 +83,11 @@
 
         <menuitem name="Product Reservations" id="reservations_menu" parent="sale.sale_order_menu"
                   action="product_reservation_action"/>
-        <menuitem name="Create Invoices" id="invoices_menu" parent="sale.sale_order_menu"
-                  action="create_invoice_action"/>
-        <menuitem name="Create Reports" id="reports_menu" parent="sale.sale_order_menu"
-                  action="create_report_action"/>
 
 
-        <!--adding smart button to customer-->
+
+
+<!--        adding smart button to customer-->
         <record id="product_reservation_smart_button" model="ir.ui.view">
             <field name="name">reservation.view.buttons</field>
             <field name="model">res.partner</field>
@@ -94,7 +103,7 @@
         </record>
 
 
-        <!--adding reservation into sale order form-->
+<!--        adding reservation details into order lines-->
         <record id="sale_order_reservation_view" model="ir.ui.view">
             <field name="name">sale.order.reservation.inherit</field>
             <field name="model">sale.order</field>
@@ -105,8 +114,6 @@
                 </field>
             </field>
         </record>
-
-
 
 
     </data>

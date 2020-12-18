@@ -52,22 +52,3 @@ class AccountMoveInherit(models.Model):
         inv = self.env['product.reservation']
         self.invoiced_id.inv_ref = self.id
         return res
-
-
-class SalesPersonReport(models.TransientModel):
-    _name = 'create.reports'
-
-    person_id = fields.Many2one('res.users', string="Sales Person")
-    person_date = fields.Date(string="Date")
-
-    def create_reports(self):
-        print("Reporting")
-        # report = self.env['res.users']
-
-        print(self.read()[0])
-        data = {
-            'model': 'res.users',
-            'form': self.read()
-        }
-        print(data)
-        return self.env.ref('product_reservation.sales_person_record_id').report_action(self, data=data)

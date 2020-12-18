@@ -6,6 +6,7 @@ from odoo import _
 class ProductReservation(models.Model):
     _name = 'product.reservation'
     _rec_name = 'reservation_seq'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     reservation_name = fields.Char(string="Name of Reservation")
     customer_id = fields.Many2one('res.partner', string="Customer Name")
@@ -17,12 +18,33 @@ class ProductReservation(models.Model):
     sale_ref = fields.Many2one('sale.order', string="Sale Order Reference")
     inv_ref = fields.Many2one('account.move', string="Invoice Reference")
     active = fields.Boolean('Active', default=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('running', 'Running'),
+        ('expired', 'Expired'),
+    ], string='Status', readonly=True, default='draft')
 
-    @api.constrains('expiry_date')
     def expiry_check(self):
-        val = self.search([('expiry_date', '<', fields.Datetime.now())])
-        for rec in self:
+        rec = self.search([('expiry_date', '<', fields.Datetime.now())])
+        for val in rec:
+            val.state = 'expired'
             val.active = False
+            val.message_post(body="Reservation is Expired", subject="Reservation Expired")
+
+    def confirm_reserve(self):
+        for rec in self:
+            run = rec.search([('expiry_date', '>', fields.Datetime.now())])
+            exp = rec.search([('expiry_date', '<', fields.Datetime.now())])
+            print("expired=", run)
+            print("running=", exp)
+            for r in run:
+                r.state = 'running'
+            for s in exp:
+                s.state = 'expired'
+            if rec.state == 'running':
+                rec.message_post(body="Reservation is running", subject="Reservation Running")
+            if rec.state == 'expired':
+                rec.message_post(body="Reservation is Expired", subject="Reservation Expired")
 
     @api.model
     def create(self, vals):
@@ -71,7 +93,7 @@ class SaleReservationInherit(models.Model):
 
     @api.onchange('reserve_id')
     def _onchange_reserve_id(self):
-        line_env = self.env['sale.order.line']
+        # line_env = self.env['sale.order.line']
         sale_lines = [(5, 0, 0)]
         for rec in self.reserve_id.reservation_lines:
             if rec.product_qty > 0:
@@ -99,5 +121,4 @@ class SaleReservationInherit(models.Model):
                     print(line.product_id)
                     diff = rec.product_qty - line.product_uom_qty
                     rec.product_qty = diff
-                    # print(diff)
         return res
