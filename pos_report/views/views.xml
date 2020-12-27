@@ -1,0 +1,15 @@
+<!--<odoo>-->
+<!--    <data>-->
+<!--        &lt;!&ndash;inherit and add new button&ndash;&gt;-->
+<!--        <record id="sale_details_excel_report_button" model="ir.ui.view">-->
+<!--            <field name="name">pos.excel.buttons</field>-->
+<!--            <field name="model">pos.details.wizard</field>-->
+<!--            <field name="inherit_id" ref="point_of_sale.view_pos_details_wizard"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="/form/footer/button" position="after">-->
+<!--                        <button name="create_excel" string="Print Excel" type="object" class="btn-primary"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+<!--    </data>-->
+<!--</odoo>-->

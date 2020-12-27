@@ -27,9 +27,9 @@
                                     <th>
                                         <strong>Sale Order</strong>
                                     </th>
-<!--                                    <th>-->
-<!--                                        <strong>Customer</strong>-->
-<!--                                    </th>-->
+                                    <th>
+                                        <strong>Customer</strong>
+                                    </th>
                                     <th>
                                         <strong>Description</strong>
                                     </th>
@@ -55,9 +55,9 @@
                                     <td style="text-align:left;">
                                         <t t-esc="l['s_o_name']"/>
                                     </td>
-<!--                                    <td style="text-align:left;">-->
-<!--                                        <t t-esc="l['r_p_name']"/>-->
-<!--                                    </td>-->
+                                    <td style="text-align:left;">
+                                        <t t-esc="l['customer_name']"/>
+                                    </td>
                                     <td style="text-align:left;">
                                         <t t-esc="l['s_o_l_name']"/>
                                     </td>

@@ -25,8 +25,5 @@
         'data/cron_job.xml',
         'views/product_reservation.xml',
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+
 }

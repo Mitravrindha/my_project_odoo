@@ -33,14 +33,12 @@ class ProductReservation(models.Model):
 
     def confirm_reserve(self):
         for rec in self:
-            run = rec.search([('expiry_date', '>', fields.Datetime.now())])
-            exp = rec.search([('expiry_date', '<', fields.Datetime.now())])
-            print("expired=", run)
-            print("running=", exp)
-            for r in run:
-                r.state = 'running'
-            for s in exp:
-                s.state = 'expired'
+            running = rec.search([('expiry_date', '>', fields.Datetime.now())])
+            expired = rec.search([('expiry_date', '<', fields.Datetime.now())])
+            for run in running:
+                run.state = 'running'
+            for exp in expired:
+                exp.state = 'expired'
             if rec.state == 'running':
                 rec.message_post(body="Reservation is running", subject="Reservation Running")
             if rec.state == 'expired':

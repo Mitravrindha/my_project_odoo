@@ -27,12 +27,5 @@
         <field name="view_id" ref="create_report_form"/>
         <field name="target">new</field>
     </record>
-
-<!--    <record id="sales_person_record_id" model="ir.actions.report">-->
-<!--        <field name="name">create.report</field>-->
-<!--        <field name="model">create.reports</field>-->
-<!--        <field name="report_type">qweb-pdf</field>-->
-<!--        <field name="report_name">sale_detail_report.report_sales_person</field>-->
-<!--    </record>-->
     </data>
 </odoo>
