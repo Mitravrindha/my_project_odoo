@@ -16,7 +16,6 @@ class PosExcelDetails(models.TransientModel):
     _inherit = 'pos.details.wizard'
 
     def create_excel(self):
-        print("kite")
         print(self.start_date)
         data = {
             'start_date': self.start_date,
@@ -71,7 +70,17 @@ class PosExcelDetails(models.TransientModel):
         sheet.merge_range(12, 2, 12, 3, "QUANTITY", format2)
         sheet.merge_range(12, 4, 12, 5, "UNIT PRICE", format2)
 
-        # query =
+        query = """select full_product_name,qty,price_unit,conf.name,date_order,amount_tax,order_id
+         from pos_order as po 
+        join pos_order_line as pol on pol.order_id =  po.id 
+        join pos_config as conf on po.session_id = conf.id  """
+
+        if data['start_date']:
+            query += ("where date(date_order) = '%s'" % (data['start_date']))
+        self._cr.execute(query)
+        record = self.cr
+
+        print(query)
 
         workbook.close()
 
