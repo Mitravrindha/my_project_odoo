@@ -6,9 +6,7 @@
 
             <xpath expr="." position="inside">
 
-            	<script type="text/javascript"
-
-                           src="/pos_report/static/src/js/action_manager.js"/>
+            	<script type="text/javascript" src="/pos_report/static/src/js/action_manager.js"/>
 
             </xpath>
 
@@ -17,4 +15,3 @@
     </data>
 
 </odoo>
-

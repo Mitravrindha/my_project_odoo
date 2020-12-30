@@ -7,9 +7,10 @@ class CreateInvoices(models.TransientModel):
     reserved_ids = fields.Many2many('product.reservation', string="Reservations")
 
     def reserve_invoice(self):
-        list = []
+        val = []
         invoice_date = fields.datetime.today()
-        for rec in range(len(self.reserved_ids)):
+        length = len(self.reserved_ids)
+        for rec in range(length):
             reserve_lines = []
             for lines in self.reserved_ids[rec].reservation_lines:
                 reserve_lines.append(
@@ -23,7 +24,9 @@ class CreateInvoices(models.TransientModel):
                 'reference_id': self.reserved_ids[rec]
             })
             invoiced_id = int(invoice)
-            list.append(invoiced_id)
+            val.append(invoiced_id)
+            inv = self.env['product.reservation'].search([('inv_ref', '=', invoiced_id)])
+            print(inv)
 
         return {
             'name': 'Invoice',
@@ -31,9 +34,9 @@ class CreateInvoices(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
-            'res_id': list,
+            'res_id': inv,
             'target': 'current',
-            'domain': [('id', '=', list)]
+            'domain': [('id', '=', val)]
 
         }
 

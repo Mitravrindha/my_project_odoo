@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "WorkorderQueue",
+    'name': "Work Order Queue",
 
     'summary': """
       Work Order Queue menu""",
@@ -10,22 +10,11 @@
       and sales order and Sort by the delivery date
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
-
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
     'depends': ['sale', 'machines'],
 
-    # always loaded
     'data': [
         'security/ir.model.access.csv',
         'views/sale_order.xml',
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+
 }
