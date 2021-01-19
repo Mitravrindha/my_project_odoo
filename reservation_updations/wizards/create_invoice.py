@@ -8,8 +8,8 @@ class CreateInvoices(models.TransientModel):
 
     def reserve_invoice(self):
         val = []
+        lis = []
         invoice_date = fields.datetime.today()
-        length = len(self.reserved_ids)
         for rec in self.reserved_ids:
             reserve_lines = []
             for lines in rec.reservation_lines:
@@ -21,12 +21,11 @@ class CreateInvoices(models.TransientModel):
                 'partner_id': rec.customer_id,
                 'invoice_date': invoice_date,
                 'invoice_line_ids': reserve_lines,
-                'reference_id': rec
+                'inv_id': rec
             })
+            lis.append([(invoice.inv_id, '=', rec)])
             invoiced_id = int(invoice)
             val.append(invoiced_id)
-            inv = self.env['product.reservation'].search([('inv_ref', '=', invoiced_id)])
-            print(inv)
 
         return {
             'name': 'Invoice',
@@ -34,7 +33,7 @@ class CreateInvoices(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
-            'res_id': inv,
+            'res_id': lis,
             'target': 'current',
             'domain': [('id', '=', val)]
 
@@ -43,11 +42,10 @@ class CreateInvoices(models.TransientModel):
 
 class AccountMoveInherit(models.Model):
     _inherit = 'account.move'
-    invoiced_id = fields.Integer(string="Reference")
-    reference_id = fields.Many2one('product.reservation', string="Reservation Reference")
+
+    inv_id = fields.Many2one('product.reservation', string="Reservation Reference")
 
     def action_post(self):
         res = super(AccountMoveInherit, self).action_post()
-        inv = self.env['product.reservation']
-        self.reference_id.inv_ref = self.id
+        self.inv_id.inv_ref = self.id
         return res

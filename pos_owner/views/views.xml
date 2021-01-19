@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+        <record id="pos_product_owner" model="ir.ui.view">
+            <field name="name">pos.owner.details</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="owner_name"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="owner_names_list">
+            <field name="name">owner.name.list</field>
+            <field name="model">owner.name</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="owner_names_form">
+            <field name="name">owner.name.form</field>
+            <field name="model">owner.name</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="owner_action_window">
+            <field name="name">Product Owner</field>
+            <field name="res_model">owner.name</field>
+            <field name="view_mode">tree,form</field>
+
+
+        </record>
+
+
+        <!-- Top menu item -->
+
+        <menuitem name="Product Owner" id="owner_menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Product Owners" id="owners_menu" parent="owner_menu_root" action="owner_action_window"/>
+
+    </data>
+</odoo>

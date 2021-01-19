@@ -80,7 +80,7 @@ class PosExcelDetails(models.TransientModel):
                 else:
                     taxes.setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
                     taxes[0]['base_amount'] += line.price_subtotal_incl
-                taxes_list = list(taxes.values())
+        taxes_list = list(taxes.values())
 
         query = """select full_product_name,qty,price_unit,date(date_order) as order_date,amount_tax
                 from pos_order as po 

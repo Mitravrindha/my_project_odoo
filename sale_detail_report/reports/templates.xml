@@ -4,16 +4,10 @@
         <template id="report_sales_person">
             <t t-call="web.html_container">
                 <t t-call="web.external_layout">
-                    <div class="article">
+                    <div class="page">
                         <div class="oe_structure"/>
                         <div class="col-lg-12" align="center">
                             <h1>Sale Details</h1>
-                        </div>
-                        <div>
-                            <t t-if="person_id">
-                                Sales Person:
-                                <span t-esc="person_id"/>
-                            </t>
                         </div>
                         <div>
                             <t t-if="person_date">
@@ -21,69 +15,77 @@
                                 <span t-esc="person_date"/>
                             </t>
                         </div>
-                        <table class="table table-sm o_main_table">
-                            <thead style="display: table-row-group">
-                                <tr>
-                                    <th>
-                                        <strong>Sale Order</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Customer</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Description</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Quantity</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Unit Price</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Total Price</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Order Date</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Sales Person</strong>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="docs" t-as="l">
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['s_o_name']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['customer_name']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['s_o_l_name']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['product_uom_qty']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['price_unit']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['price_subtotal']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['date_order']"/>
-                                    </td>
-                                    <td style="text-align:left;">
-                                        <t t-esc="l['s_p_name']"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <t t-foreach="val" t-as="m">
+                            <p>
+                                <center>
+                                    <b>Sales Person:</b>
+                                    <t t-esc="m['name']"/>
+                                </center>
+                            </p>
+                            <table class="table table-sm o_main_table">
+                                <thead style="display: table-row-group">
+                                    <tr>
+                                        <th>
+                                            <strong>Sale Order</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Customer</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Description</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Quantity</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Unit Price</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Total Price</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Order Date</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="l">
+                                        <t t-if="m['name'] == l['s_p_name']">
+
+                                            <tr>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['s_o_name']"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['customer_name']"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['s_o_l_name']"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['product_uom_qty']"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['price_unit']"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['price_subtotal']"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <t t-esc="l['date_order']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+
+                        </t>
                     </div>
                 </t>
             </t>
         </template>
     </data>
 </odoo>
-
-

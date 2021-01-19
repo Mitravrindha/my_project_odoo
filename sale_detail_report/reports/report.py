@@ -3,7 +3,6 @@ from odoo import models, fields, api
 
 class SalePersonReport(models.Model):
     _name = 'report.sale_detail_report.report_sales_person'
-    user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
 
     @api.model
     def _get_report_values(self, docids, data):
@@ -16,17 +15,29 @@ class SalePersonReport(models.Model):
         left JOIN res_partner as r_p ON r_u.partner_id = r_p.id
         join res_partner as r on s_o.partner_id = r.id """
 
-        if data['form']['person_id']:
-            query += (" where s_o.user_id = '%s' " % (data['form']['person_id'][0]))
-        if data['person_date']:
-            query += (" and  date(s_o.date_order) ='%s'" % (data['person_date']))
+        lis = data['form']['person_ids']
+        tup = str(tuple(lis)).replace(',)', ')')
 
-        print(query)
+        if data['form']['person_ids']:
+            query += (" where s_o.user_id in {}".format(tup))
+        if data['form']['person_date']:
+            query += ("and  date(s_o.date_order) ='%s'" % (data['person_date']))
+        query += "order by s_p_name"
         self._cr.execute(query)
         record = self._cr.dictfetchall()
-        print(record)
+
+        query = """select r_p.name as name from res_users as r_u
+                    join res_partner as r_p ON r_u.partner_id = r_p.id
+                    where r_u.active = 'True'"""
+        if data['form']['person_ids']:
+            query += (" and r_u.id in {}".format(tup))
+        self._cr.execute(query)
+        values = self._cr.dictfetchall()
+        print(values)
+
+
         return {
             'docs': record,
-            'person_id': data['form']['person_id'][1] if data['form']['person_id'] else None,
+            'val': values,
             'person_date': data['person_date'],
         }

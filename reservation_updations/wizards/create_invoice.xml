@@ -33,11 +33,11 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="invoiced_id" invisible="1"/>
-                <field name="reference_id" invisible="1"/>
+                <field name="inv_id"/>
             </field>
         </field>
     </record>
+
     <menuitem name="Create Invoices" id="invoices_menu" parent="sale.sale_order_menu"
               action="reservation_invoices_action"/>
 

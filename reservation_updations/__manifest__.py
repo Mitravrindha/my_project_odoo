@@ -10,7 +10,7 @@
         invoices for those reservations.While confirming the invoice the invoice reference is added to the reservation form.
     """,
 
-    'depends': ['base', 'product_reservation'],
+    'depends': ['base', 'product_reservation', 'account'],
 
     'data': [
         'security/ir.model.access.csv',
