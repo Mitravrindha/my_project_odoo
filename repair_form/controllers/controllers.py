@@ -1,21 +1,29 @@
-# -*- coding: utf-8 -*-
-# from odoo import http
+from odoo import http
+from odoo.http import request
 
 
-# class RepairForm(http.Controller):
-#     @http.route('/repair_form/repair_form/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+class RepairForm(http.Controller):
+    @http.route('/repair_order', type="http", auth='public', website=True)
+    def repair_order(self, **kw):
+        product_rec = request.env['product.template'].search([])
+        partner_rec = request.env['res.partner'].search([])
+        users_rec = request.env['res.users'].search([])
+        location_rec = request.env['stock.location'].search([])
+        print(product_rec)
+        return http.request.render('repair_form.repair_form',
+                                   {'products': product_rec, 'partners': partner_rec, 'users': users_rec,
+                                    'locations': location_rec,  'measures': uom_rec})
 
-#     @http.route('/repair_form/repair_form/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('repair_form.listing', {
-#             'root': '/repair_form/repair_form',
-#             'objects': http.request.env['repair_form.repair_form'].search([]),
-#         })
-
-#     @http.route('/repair_form/repair_form/objects/<model("repair_form.repair_form"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('repair_form.object', {
-#             'object': obj
-#         })
+    @http.route('/create/repair_form', type="http", auth='public', website=True)
+    def create_order(self, **kw):
+        print(kw)
+        # print(kw.get('product_id.product_uom'))
+        # repair_val = {
+        #     'product_uom': kw.get('product.uom_po_id.id'),
+        #     # 'product_qty': kw.get('product_qty'),
+        #     # 'partner_id': kw.get('partner_id'),
+        #     # 'user_id': kw.get('user_id')
+        #
+        # }
+        request.env['repair.order'].create(kw)
+        return request.render("repair_form.repair_thanks", {})

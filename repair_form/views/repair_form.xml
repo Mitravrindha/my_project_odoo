@@ -8,27 +8,94 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">55</field>
         </record>
+    </data>
 
-        <template id="repair_form" name="Repair Form">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure">
-                        <div class="container">
+    <template id="repair_form" name="Repair Form">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <div class="container">
+                        <sheet>
+                            <center>
+                                <strong>
+                                    <h3>REPAIR FORM</h3>
+                                </strong>
+                            </center>
                             <form role="form" action="/create/repair_form" method="post">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <div class="form-group">
-                                    <label for="product_qty" class="control-label">Product Name</label>
-                                    <input type="text" name="product_qty" t-att-value="product_qty" id="product_qty"
-                                           class="form-control" required="required"/>
+                                    <label for="product_name">Product Name</label>
+                                    <select name="product_id" class="form-control link-style">
+                                        <t t-foreach="products" t-as="product">
+                                            <option t-esc="product.name" t-att-value="product.id"/>
+                                        </t>
+                                    </select>
                                 </div>
+
+                                <div class="form-group">
+                                    <group>
+                                        <label for="product_qty" class="control-label">Product Quantity</label>
+                                        <input type="text" name="product_qty" t-att-value="product_qty" id="product_qty"
+                                               class="form-control" required="required"/>
+                                        <label for="product_uom" class="control-label">Unit of measure</label>
+
+                                    </group>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="partner_id" class="control-label">Customer</label>
+                                    <select name="partner_id" class="form-control link-style">
+                                        <t t-foreach="partners" t-as="partner">
+                                            <option t-esc="partner.name" t-att-value="partner.id"/>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="user_id" class="control-label">Responsible</label>
+                                    <select name="user_id" class="form-control link-style">
+                                        <t t-foreach="users" t-as="user">
+                                            <option t-esc="user.name" t-att-value="user.id"/>
+                                        </t>
+                                    </select>
+                                </div>
+
                                 <div class="clearfix oe_login_buttons">
                                     <button type="submit" class="btn btn-primary pull-left">Submit</button>
                                 </div>
                             </form>
-                        </div>
+                        </sheet>
                     </div>
                 </div>
+            </div>
+        </t>
+    </template>
+    <record id="repair_thanks" model="website.page">
+        <field name="name">Thanks</field>
+        <field name="type">qweb</field>
+        <field name="url">/repair_form_thank_you</field>
+        <field name="website_published">True</field>
+        <field name="key">repair_form.repair_thanks</field>
+        <field name="arch" type="xml">
+            <t name="Thanks" t-name="repair_form.repair_thanks">
+                <t t-call="website.layout">
+                    <div id="wrap">
+                        <div class="container">
+                            <h1>Thanks!</h1>
+                            <div class="col-lg-8">
+                                <div class="alert alert-success" role="status">
+                                    Your request has been accepted
+                                </div>
+                                <p>
+                                    We will get back to you shortly.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
             </t>
-        </template>
-    </data>
+        </field>
+    </record>
+
+
 </odoo>
