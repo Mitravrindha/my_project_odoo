@@ -6,6 +6,8 @@ from odoo import _
 class ProductReservation(models.Model):
     _name = 'product.reservation'
     _rec_name = 'reservation_seq'
+    _description = 'Reservation'
+
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     reservation_name = fields.Char(string="Name of Reservation")
