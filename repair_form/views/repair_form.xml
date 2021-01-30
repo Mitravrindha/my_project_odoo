@@ -57,25 +57,15 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="user_id" class="control-label">Responsible</label>
-                                    <select name="user_id" class="form-control link-style">
-                                        <t t-foreach="users" t-as="user">
-                                            <option t-esc="user.name" t-att-value="user.id"/>
-                                        </t>
-                                    </select>
+<!--                                <div class="form-group">-->
+<!--                                    <label for="user_id" class="control-label">Responsible</label>-->
+<!--                                    <select name="user_id" class="form-control link-style">-->
+<!--                                        <t t-foreach="users" t-as="user">-->
+<!--                                            <option t-esc="user.name" t-att-value="user.id"/>-->
+<!--                                        </t>-->
+<!--                                    </select>-->
 
-                                </div>
-                                <!--                                -->
-                                <!--                                <div class="form-group">-->
-                                <!--                                    <label for="product_uom" class="control-label">Responsible</label>-->
-
-                                <!--                                    <select name="product_uom" class="form-control link-style">-->
-                                <!--                                        <t t-foreach="measures" t-as="measure">-->
-                                <!--                                            <option t-esc="measure.name" t-att-value="measure.id"/>-->
-                                <!--                                        </t>-->
-                                <!--                                    </select>-->
-                                <!--                                </div>-->
+<!--                                </div>-->
 
 
                                 <div class="form-group">

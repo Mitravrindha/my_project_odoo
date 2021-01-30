@@ -1,0 +1,66 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="customer_group_list">
+            <field name="name">Customer Group List</field>
+            <field name="model">customer.group</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="group_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="customer_group_form">
+            <field name="name">Customer Group Form</field>
+            <field name="model">customer.group</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="group_name"/>
+                            <field name="category_name_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="customer_group_action_window">
+            <field name="name">Customer Group</field>
+            <field name="res_model">customer.group</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- Top menu item -->
+        <menuitem name="Customer Group" id="customer_group_menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Customer Group" id="customer_group.menu_1" parent="customer_group_menu_root"
+                  action="customer_group_action_window"/>
+
+
+        <!--        field in partner page-->
+        <record model="ir.ui.view" id="view_resuser_field_form">
+            <field name="name">resusers_field_form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Extra Details">
+                        <group>
+                            <field name="customer_group_id"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
