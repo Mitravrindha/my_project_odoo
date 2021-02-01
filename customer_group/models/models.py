@@ -13,6 +13,6 @@ class CustomerGroup(models.Model):
 
 
 class CustomerGroupInherit(models.Model):
-    _inherit = 'res.users'
+    _inherit = 'res.partner'
 
     customer_group_id = fields.Many2one('customer.group', string="Customer Group")

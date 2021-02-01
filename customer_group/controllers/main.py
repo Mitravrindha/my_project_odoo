@@ -7,6 +7,7 @@ from odoo.http import request
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.osv import expression
+from ast import literal_eval
 
 
 class ProductVisibilityCon(WebsiteSale):
@@ -23,14 +24,6 @@ class ProductVisibilityCon(WebsiteSale):
                 yield {'loc': loc}
 
     def reset_domain(self, search, categories, attrib_values, search_in_description=True):
-        '''
-        Function returns a domain consist of filter conditions
-        :param search: search variable
-        :param categories: list of category available
-        :param available_products: list of available product ids from product.template
-        :param attrib_values:product attiribute values
-        :param search_in_description: boolean filed showing there is search variable exist or not'''
-
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -62,29 +55,39 @@ class ProductVisibilityCon(WebsiteSale):
 
         return expression.AND(domains)
 
-
-class WebsiteSaleInherit(WebsiteSale):
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
         '''/shop/category/<model("product.public.category"):category>''',
         '''/shop/category/<model("product.public.category"):category>/page/<int:page>'''
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
+        ''''Override shop function.'''
         available_categ = ''
         user = request.env['res.users'].sudo().search([('id', '=', request.env.user.id)])
-        mode = user.customer_group_id.category_name_ids
-        if mode:
-            available_categ = mode
-            print(available_categ)
+        partner = request.env['res.partner'].sudo().search([('id', '=', user.partner_id.id)])
 
-        Category_avail = []
+        mode = partner.customer_group_id
+        if mode:
+            if not user:
+                cat = literal_eval(
+                    request.env['ir.config_parameter'].sudo().get_param(
+                        'customer_group.customer_group_id.category_name_ids', 'False'))
+                available_categ = request.env['product.public.category'].search([('id', 'in', cat)])
+            else:
+                available_categ = partner.customer_group_id.category_name_ids
+        else:
+            return request.render("repair_form.repair_thanks", {})
+
+        category_avail = []
         Category = request.env['product.public.category']
+
         for ids in available_categ:
             if not ids.parent_id.id in available_categ.ids:
-                Category_avail.append(ids.id)
-        categ = request.env['product.public.category'].search([('id', 'in', Category_avail)])
-        print(categ)
+                category_avail.append(ids.id)
+        categ = request.env['product.public.category'].search([('id', 'in', category_avail)])
+
+        # supering shop***
 
         if not available_categ:
             return super(ProductVisibilityCon, self).shop(page, category, search, ppg, **post)
@@ -97,141 +100,115 @@ class WebsiteSaleInherit(WebsiteSale):
         else:
             category = Category
 
-            if ppg:
-                try:
-                    ppg = int(ppg)
-                    post['ppg'] = ppg
-                except ValueError:
-                    ppg = False
-            if not ppg:
-                ppg = request.env['website'].get_current_website().shop_ppg or 20
-            ppr = request.env['website'].get_current_website().shop_ppr or 4
-            attrib_list = request.httprequest.args.getlist('attrib')
-            attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
-            attributes_ids = {v[0] for v in attrib_values}
-            attrib_set = {v[1] for v in attrib_values}
-            domain = self._get_search_domain(search, category, attrib_values)
-            Product = request.env['product.template'].with_context(bin_size=True)
-            # if available_products:
-            #     domain_pro = self.reset_domain(search, category, available_products, attrib_values)
-            #     Product = Product.search(domain_pro)
-            keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list,
-                            order=post.get('order'))
-            pricelist_context, pricelist = self._get_pricelist_context()
-            request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
-            url = "/shop"
-            if search:
-                post["search"] = search
-            if attrib_list:
-                post['attrib'] = attrib_list
-            if not category:
-                domain = self.reset_domain(search, available_categ, attrib_values)
-            search_product = Product.search(domain)
-            print("sp", search_product)
-            website_domain = request.website.website_domain()
-            categs_domain = [('parent_id', '=', False), ('product_tmpl_ids', 'in', search_product.ids)] + website_domain
-            if search:
-                search_categories = Category.search(
-                    [('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
-                categs_domain.append(('id', 'in', search_categories.ids))
+        if ppg:
+            try:
+                ppg = int(ppg)
+                post['ppg'] = ppg
+            except ValueError:
+                ppg = False
+        if not ppg:
+            ppg = request.env['website'].get_current_website().shop_ppg or 20
+        ppr = request.env['website'].get_current_website().shop_ppr or 4
+        attrib_list = request.httprequest.args.getlist('attrib')
+        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
+        attributes_ids = {v[0] for v in attrib_values}
+        attrib_set = {v[1] for v in attrib_values}
+        domain = self._get_search_domain(search, category, attrib_values)
+        Product = request.env['product.template'].with_context(bin_size=True)
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list,
+                        order=post.get('order'))
+        pricelist_context, pricelist = self._get_pricelist_context()
+        request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
+        url = "/shop"
+        if search:
+            post["search"] = search
+        if attrib_list:
+            post['attrib'] = attrib_list
+        if not category:
+            domain = self.reset_domain(search, available_categ, attrib_values)
+        search_product = Product.search(domain)
+        website_domain = request.website.website_domain()
+        categs_domain = [('parent_id', '=', False), ('product_tmpl_ids', 'in', search_product.ids)] + website_domain
+        if search:
+            search_categories = Category.search(
+                [('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
+            categs_domain.append(('id', 'in', search_categories.ids))
+        else:
+            search_categories = available_categ
+        if category:
+            url = "/shop/category/%s" % slug(category)
+        product_count = len(search_product)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
+        products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
+        if not category:
+            products = Product.search(domain, limit=ppg, offset=pager['offset'],
+                                      order=self._get_search_order(post))
+        else:
+            products = Product.search(domain, limit=ppg, offset=pager['offset'],
+                                      order=self._get_search_order(post))
+        ProductAttribute = request.env['product.attribute']
+        if products:
+            # get all products without limit
+            attributes = ProductAttribute.search([('product_tmpl_ids', 'in', search_product.ids)])
+        else:
+            attributes = ProductAttribute.browse(attributes_ids)
+
+        layout_mode = request.session.get('website_sale_shop_layout_mode')
+        if not layout_mode:
+            if request.website.viewref('website_sale.products_list_view').active:
+                layout_mode = 'list'
             else:
-                search_categories = available_categ
-            print("search category", search_categories)
-            if category:
-                url = "/shop/category/%s" % slug(category)
-            product_count = len(search_product)
-            pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-            products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
-            ProductAttribute = request.env['product.attribute']
-            if products:
-                # get all products without limit
-                attributes = ProductAttribute.search([('product_tmpl_ids', 'in', search_product.ids)])
-            else:
-                attributes = ProductAttribute.browse(attributes_ids)
-            print(products)
+                layout_mode = 'grid'
+        values = {
+            'search': search,
+            'category': category,
+            'attrib_values': attrib_values,
+            'attrib_set': attrib_set,
+            'pager': pager,
+            'pricelist': pricelist,
+            'add_qty': add_qty,
+            'products': products,
+            'search_count': product_count,  # common for all searchbox
+            'bins': TableCompute().process(products, ppg, ppr),
+            'ppg': ppg,
+            'ppr': ppr,
+            'categories': categ,
+            'attributes': attributes,
+            'keep': keep,
+            'search_categories_ids': categ.ids,
+            'layout_mode': layout_mode,
+        }
 
-            layout_mode = request.session.get('website_sale_shop_layout_mode')
-            if not layout_mode:
-                if request.website.viewref('website_sale.products_list_view').active:
-                    layout_mode = 'list'
-                else:
-                    layout_mode = 'grid'
-            print("search", search)
-            print("cate", category)
-            print("attri", attrib_values)
-            print("products", products)
+        if category:
+            values['main_object'] = category
+        return request.render("website_sale.products", values)
 
-            values = {
-                'search': search,
-                'category': category,
-                'attrib_values': attrib_values,
-                'attrib_set': attrib_set,
-                'pager': pager,
-                'pricelist': pricelist,
-                'add_qty': add_qty,
-                'products': products,
-                'search_count': product_count,  # common for all searchbox
-                'bins': TableCompute().process(products, ppg, ppr),
-                'ppg': ppg,
-                'ppr': ppr,
-                'categories': categ,
-                'attributes': attributes,
-                'keep': keep,
-                'search_categories_ids': categ.ids,
-                'layout_mode': layout_mode,
-            }
-
-            if category:
-                values['main_object'] = category
-                print("mmmmmmm")
-            return request.render("website_sale.products", values)
-
-    # --------------------------------------------------------------------------
     # Products Search Bar
-    # --------------------------------------------------------------------------
 
     @http.route('/shop/products/autocomplete', type='json', auth='public', website=True)
     def products_autocomplete(self, term, options={}, **kwargs):
-        """
-        Returns list of products according to the term and product options
+        user = request.env['res.users'].sudo().search([('id', '=', request.env.user.id)])
+        partner = request.env['res.partner'].sudo().search([('id', '=', user.partner_id.id)])
+        available_categ = partner.customer_group_id.category_name_ids
 
-        Params:
-            term (str): search term written by the user
-            options (dict)
-                - 'limit' (int), default to 5: number of products to consider
-                - 'display_description' (bool), default to True
-                - 'display_price' (bool), default to True
-                - 'order' (str)
-                - 'max_nb_chars' (int): max number of characters for the
-                                        description if returned
-
-        Returns:
-            dict (or False if no result)
-                - 'products' (list): products (only their needed field values)
-                        note: the prices will be strings properly formatted and
-                        already containing the currency
-                - 'products_count' (int): the number of products in the database
-                        that matched the search query
-        """
         ProductTemplate = request.env['product.template']
-
         display_description = options.get('display_description', True)
         display_price = options.get('display_price', True)
         order = self._get_search_order(options)
         max_nb_chars = options.get('max_nb_chars', 999)
-
         category = options.get('category')
         attrib_values = options.get('attrib_values')
 
-        domain = self._get_search_domain(term, category, attrib_values, display_description)
+        if not available_categ:
+            domain = self._get_search_domain(term, category, attrib_values, display_description)
+        else:
+            domain = self.reset_domain(term, available_categ, attrib_values, display_description)
         products = ProductTemplate.search(
             domain,
             limit=min(20, options.get('limit', 5)),
             order=order
         )
-
         fields = ['id', 'name', 'website_url']
-        print("llllllllll")
         if display_description:
             fields.append('description_sale')
 

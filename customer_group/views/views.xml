@@ -48,12 +48,12 @@
         <!--        field in partner page-->
         <record model="ir.ui.view" id="view_resuser_field_form">
             <field name="name">resusers_field_form</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="Extra Details">
+                    <page string="Customer Groups">
                         <group>
                             <field name="customer_group_id"/>
                         </group>
