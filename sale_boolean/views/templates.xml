@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="sale_report_inherit" inherit_id="stock.report_picking">
+        <xpath expr="//h1[@class='mt0 float-left']" position="before">
+            <div name="delivery_bool">
+                <t t-if="o.delivery_bool">
+
+
+                    <strong>
+                        <h2 style="color: red;">DO NOT DELIVER!!!</h2>
+                    </strong>
+                </t>
+            </div>
+        </xpath>
+
+    </template>
+
+</odoo>

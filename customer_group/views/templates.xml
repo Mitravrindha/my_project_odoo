@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <record id="repair_thanks" model="website.page">
-            <field name="name">Thanks</field>
+            <field name="name">Sorry</field>
             <field name="type">qweb</field>
             <field name="url">/repair_form_thank_you</field>
             <field name="website_published">True</field>
@@ -11,15 +11,12 @@
                     <t t-call="website.layout">
                         <div id="wrap">
                             <div class="container">
-                                <h1>No products to show!!</h1>
-<!--                                <div class="col-lg-8">-->
-<!--                                    <div class="alert alert-success" role="status">-->
-<!--                                        Your request has been accepted-->
-<!--                                    </div>-->
-<!--                                    <p>-->
-<!--                                        We will get back to you shortly.-->
-<!--                                    </p>-->
-<!--                                </div>-->
+                                <h1>Sorry...</h1>
+                                <div class="col-lg-8">
+                                    <div class="alert alert-success" role="status">
+                                        No products to show!!
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>

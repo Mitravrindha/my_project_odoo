@@ -6,6 +6,7 @@ odoo.define('pos_button.pos', function (require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
 
+
     class ShowDiscountButton extends PosComponent {
         constructor() {
             super(...arguments);
@@ -86,6 +87,7 @@ odoo.define('pos_button.pos', function (require) {
 
     var models = require('point_of_sale.models');
     var _super_order = models.Order.prototype;
+
     models.Order = models.Order.extend({
        initialize: function() {
         _super_order.initialize.apply(this,arguments);
@@ -93,9 +95,9 @@ odoo.define('pos_button.pos', function (require) {
                    this.pos.base_to_discount = 0;
 
     },
+
         export_for_printing: function () {
             var result = _super_order.export_for_printing.apply(this, arguments);
-            console.log("->",this.pos.discount_price)
             result.discount_price = this.pos.discount_price;
             result.base_to_discount = this.pos.base_to_discount;
             result.mode = this.pos.config.pay;

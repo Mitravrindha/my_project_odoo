@@ -54,11 +54,11 @@
 
         <!-- Top menu item -->
 
-        <menuitem name="Product Owner" id="owner_menu_root"/>
+<!--        <menuitem name="Product Owner" id="owner_menu_root"/>-->
 
         <!-- menu categories -->
 
-        <menuitem name="Product Owners" id="owners_menu" parent="owner_menu_root" action="owner_action_window"/>
+        <menuitem name="Product Owners" id="owners_menu" parent="point_of_sale.menu_point_config_product" action="owner_action_window"/>
 
     </data>
 </odoo>

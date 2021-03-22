@@ -68,7 +68,8 @@ class ProductVisibilityCon(WebsiteSale):
         partner = request.env['res.partner'].sudo().search([('id', '=', user.partner_id.id)])
 
         mode = partner.customer_group_id
-        if mode:
+        visibility = partner.product_visible
+        if mode or visibility:
             if not user:
                 cat = literal_eval(
                     request.env['ir.config_parameter'].sudo().get_param(

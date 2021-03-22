@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="paytrail_form">
+        <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+        <input name="MERCHANT_ID" type="hidden" t-att-value="MERCHANT_ID"/>
+        <input name="URL_SUCCESS" type="hidden" t-att-value="URL_SUCCESS"/>
+        <input name="URL_CANCEL" type="hidden" t-att-value="URL_CANCEL"/>
+        <input name="LOCALE" type="hidden" t-att-value="en_US"/>
+        <input name="ORDER_NUMBER" type="hidden" t-att-value="ORDER_NUMBER"/>
+        <input name="PARAMS_IN" type="hidden" t-att-value="PARAMS_IN"/>
+        <input name="PARAMS_OUT" type="hidden" t-att-value="PARAMS_OUT"/>
+        <input name="AMOUNT" type="hidden" t-att-value="AMOUNT"/>
+        <input name="AUTHCODE" type="hidden" t-att-value="AUTHCODE"/>
+    </template>
+</odoo>

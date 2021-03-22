@@ -17,3 +17,4 @@ class CustomerGroupInherit(models.Model):
     _inherit = 'res.partner'
 
     customer_group_id = fields.Many2one('customer.group', string="Customer Group")
+    product_visible = fields.Boolean(string="All Product Visibility")

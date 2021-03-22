@@ -19,8 +19,8 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="group_name"/>
-                            <field name="category_name_ids" widget="many2many_tags"/>
+                            <field name="group_name" style="width:55%%" required="1"/>
+                            <field name="category_name_ids" widget="many2many_tags" style="width:55%%" required="1"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -40,13 +40,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-
-        <!-- Top menu item -->
-        <menuitem name="Customer Group" id="customer_group_menu_root"/>
-
         <!-- menu categories -->
 
-        <menuitem name="Customer Group" id="customer_group.menu_1" parent="customer_group_menu_root"
+        <menuitem name="Customer Group" id="customer_group.menu_1" parent="website.menu_website_global_configuration"
                   action="customer_group_action_window"/>
 
 
@@ -60,7 +56,9 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Customer Groups">
                         <group>
-                            <field name="customer_group_id"/>
+                            <field name="customer_group_id" style="width:55%%"/>
+                            <field name="product_visible" style="width:55%%"/>
+
                         </group>
                     </page>
                 </xpath>

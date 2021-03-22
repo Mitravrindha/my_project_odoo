@@ -57,6 +57,7 @@
                     </t>
                 </t>
             </div>
+
             <t t-if="receipt.discount_price !== 0">
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
